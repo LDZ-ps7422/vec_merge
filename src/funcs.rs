@@ -20,7 +20,7 @@ pub fn get_page_info(page_size: u32, mut merger: Box<dyn Merger>) -> Vec<PageInf
 
     while let Some(opr_record) = merger.merge_read() {
 
-        println!("{}\t{}\t {}", opr_record.id, opr_record.name, opr_record.total);
+        // println!("{}\t{}\t {}", opr_record.id, opr_record.name, opr_record.total);
 
         end_key = opr_record.id.clone();
         count += 1;

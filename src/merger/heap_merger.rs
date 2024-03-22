@@ -7,12 +7,13 @@ use super::Merger;
 
 #[derive(Debug, PartialEq, Eq)]
 struct HeapData {
-    value: String,
+    // value: String,
+    value: Record,
     index: usize,
 }
 impl Ord for HeapData {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.value.cmp(&other.value).reverse()
+        self.value.id.cmp(&other.value.id).reverse()
     }
 }
 impl PartialOrd for HeapData {
@@ -32,7 +33,7 @@ impl HeapMerger {
         for (idx, source) in sources.iter_mut().enumerate() {
             if let Some(record) = source.read() {
                 buf_heap.push(HeapData{
-                    value: record.id,
+                    value: record,
                     index: idx,
                 })
             }
@@ -49,14 +50,13 @@ impl Merger for HeapMerger {
         let mut _min_record: Option<Record> = None;
 
         if let Some(min_data) = self.heap_tree.pop() {
-            _min_record = self.sources[min_data.index].read();
-            self.sources[min_data.index].remove_one();
+            _min_record = Some(min_data.value);
 
-            if let Some(record) = self.sources[min_data.index].read() {
-                let value = record.id;
+            if let Some(value) = self.sources[min_data.index].read() {
                 let index = min_data.index;
                 self.heap_tree.push(HeapData{value, index});
             }
+            // self.sources[min_data.index].remove_one();
             _min_record
         } else {
             None

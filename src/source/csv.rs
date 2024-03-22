@@ -18,25 +18,22 @@ impl Source for MemorySource {   // 数据源的方法
 
 pub struct CsvSource {
     file_cursor: BufReader<File>,
-    top: Option<Record>,
 }
 impl CsvSource {
     pub fn new(file_path: String) -> Self {
-        let file_name = file_path.clone();
-        let file_open = File::open(file_path);
+        let file_name = file_path;
+        let file_open = File::open(& file_name);
         let file = match file_open {
             Ok(file) => file,
             Err(error) => panic!("Problem opening the file: \"{}\"\nError Info: {:?}", file_name, error),
         };
-        let mut file_cursor = BufReader::new(file);
-        let top = CsvSource::load_one_record(&mut file_cursor);
+        let file_cursor = BufReader::new(file);
         let csvsource = CsvSource {
             file_cursor,
-            top,
         };
         csvsource
     }
-    fn load_one_record(cursor: &mut BufReader<File>) -> Option<Record> {
+    pub fn load_one_record(cursor: &mut BufReader<File>) -> Option<Record> {
         // 从当前cursor所在位置向后读取一个record并返回
         let mut line = String::new();
         let mut len = cursor.read_line(&mut line);
@@ -80,9 +77,9 @@ impl CsvSource {
 }
 impl Source for CsvSource {
     fn read(&mut self) -> Option<Record> {
-        self.top.clone()
+        CsvSource::load_one_record(&mut self.file_cursor)
     }
     fn remove_one(&mut self) {
-        self.top = CsvSource::load_one_record(&mut self.file_cursor);
+        panic!("··ERROR: REMOVE_ONE is not a legal func for csvMerger, check code..");
     }
 }
