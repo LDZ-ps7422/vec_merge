@@ -1,27 +1,8 @@
 use crate::merger::Record;
 use crate::source::Source;
 use std::collections::BinaryHeap;
-use std::cmp::Ordering;
 
-use super::Merger;
-
-#[derive(Debug, PartialEq, Eq)]
-struct HeapData {
-    // value: String,
-    value: Record,
-    index: usize,
-}
-impl Ord for HeapData {
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.value.id.cmp(&other.value.id).reverse()
-    }
-}
-impl PartialOrd for HeapData {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
+use super::{HeapData, Merger};
 
 pub struct HeapMerger {
     sources: Vec<Box<dyn Source>>,

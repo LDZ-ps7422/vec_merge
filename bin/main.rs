@@ -1,4 +1,4 @@
-use vec_merge::{funcs::get_page_info, merger::{heap_merger::HeapMerger, Merger}, source::csv::CsvSource};
+use vec_merge::{get_page_info::get_page_info, merger::{heap_merger::HeapMerger, Merger}, source::{csv::CsvSource, thread_src::ThreadSource}};
 use std::env;
 use std::time::Instant;
 
@@ -12,13 +12,13 @@ fn main() {
     let mut sources: Vec<Box<dyn Source>> = Vec::new();
 
     for file_name in &file_names {
-        let file_path = format!("./file/{}.csv", file_name);
-        sources.push(Box::new(CsvSource::new(file_path)) as Box<dyn Source>);
+        let file_path = format!("./file/data{}.csv", file_name);
+        // sources.push(Box::new(CsvSource::new(file_path)) as Box<dyn Source>);
+        sources.push(Box::new(ThreadSource::new(file_path)) as Box<dyn Source>);
     }
-    // let merger = SourceMerger{sources};
-    // let merger = HeapMerger::new(sources);
 
-    let page_size = 10000;
+    // println!("Code is moving outside ..");
+    let page_size = 100000;
 
     // 开始计时
     let start_time = Instant::now();

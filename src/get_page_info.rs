@@ -39,6 +39,8 @@ pub fn get_page_info(page_size: u32, mut merger: Box<dyn Merger>) -> Vec<PageInf
             cur_total = 0;
         }
         cur_index += 1;
+
+
     }
 
     if count > 0 { // 添加最后一个 PageInfo 对象
