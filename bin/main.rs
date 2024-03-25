@@ -8,17 +8,18 @@ use vec_merge::source::Source;
 
 fn main() {
 
-    let file_names: Vec<String> = env::args().skip(1).collect();
+    // let file_names: Vec<String> = env::args().skip(1).collect();
+    let file_num: u32 = env::args().nth(1).unwrap().parse().expect("Please provide a valid number");
     let mut sources: Vec<Box<dyn Source>> = Vec::new();
 
-    for file_name in &file_names {
-        let file_path = format!("./file/data{}.csv", file_name);
+    for i in 1..=file_num {
+        let file_path = format!("./file20x100w/data{}.csv", i);
         // sources.push(Box::new(CsvSource::new(file_path)) as Box<dyn Source>);
         sources.push(Box::new(ThreadSource::new(file_path)) as Box<dyn Source>);
     }
 
     // println!("Code is moving outside ..");
-    let page_size = 100000;
+    let page_size = 1000000;
 
     // 开始计时
     let start_time = Instant::now();
